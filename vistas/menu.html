@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../estilos/styles2css.css">
+  <link rel="stylesheet" href="../estilos/stylesmenu.css">
+  <!-- ---vue- -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<!-- jquery-- -->
+  <script src="../node_modules/jquery/dist/jquery.js"></script>
+  <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<!-- sweealert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+  <!-- CSS only --> 
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  <!-- JavaScript Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+    crossorigin="anonymous"></script>
+  <title>Menu</title>
+
+</head>
+
+<body>
+
+  <div id="app" class="idapp">
+
+    <main class="maincontenapp">
+      <div class="contendor">
+        <div class="contencontendor">
+          <div class="divlogo">
+            <img class="logo" src="../img/fasfood2.jpg" alt="">
+          </div>
+
+          <div class="divtitulo">
+            <h1 class="h1color">{{primertitle}}<small class="smallcolor">{{segindotitle}}</small></h1>
+
+          </div>
+
+          <form action="" method="get">
+            <div class="divsearch">
+              <input type="search" name="" id="" placeholder="Buscar aqui..">
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </main>
+
+
+
+    <div class="divmaincontent">
+      <div class="container">
+        <!-- <h2 class="text-center mb-4 mt-2"># Crud Vue JS</h2> -->
+        <div class="alert" :class="{'alert-warning':alerta.tipo == 'warning','alert-success':alerta.tipo == 'success'}"
+          v-if="showAlerta">
+
+          {{alerta.message}}
+          <button type="button" @click.prevent="closeAlerta" class="close"><span
+              aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="text-right">
+          <a href @click.prevent="add" class="btn btn-info btn-sm">Agregar Comida</a>
+        </div>
+        <table class="table mt-2">
+          <thead>
+            <tr>
+              <th>Codigo</th>
+              <th>NombreProducto</th>
+              <th>TipoProducto</th>
+              <th>PrecioProducto</th>
+              <th>Editar</th>
+              <th>Eliminar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="!cadastros || cadastros.length == 0 ">
+              <td colspan="7" class="text-center">no hay Comida registrada</td>
+            </tr>
+            <!-- v-else v-for="(c,k) in cadastros" -->
+            <tr v-else v-for="(c,k) in cadastros">
+              <td>{{k+1}}</td>
+              <td>{{c.nombre_producto}}</td>
+              <td>{{c.tipo_producto}}</td>
+              <td>{{c.precio_producto}}</td>
+              <td>
+                <a href @click.prevent="edit(c,k)" class="btn btn-warning text-danger btn-sm">Editar</a>
+              </td>
+              <td>
+                <a @click.prevent="deletar(k)" class="btn btn-danger btn-sm">Eliminar</a>
+                <!-- <a @click.prevent="deletar(k)" class="btn btn-danger btn-sm">Eliminar</a> -->
+              </td>
+            </tr>
+            <tr v-else v-for="(c,k) in cadastros">
+              <td>{{k+1}}</td>
+             <td>{{c.nombre_producto}}</td>
+             <td>{{c.tipo_producto}}</td>
+             <td>{{c.precio_producto}}</td>
+             </tr>
+            
+          </tbody>
+        </table>
+      </div>
+
+      <!-- # modal form -->
+      <div v-if="modal" ref="modal" class="modal fade" id="modalForm" tabindex="-1" role="dialog"
+        aria-labelledby="modalFormLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalFormLabel">{{modal.title}}</h5>
+              <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button> -->
+            </div>
+            <!-- v-on:submit.prevent="save" -->
+            <form v-on:submit.prevent="save">
+              <div class="modal-body">
+                <div class="form-group row">
+                  <label class="col-form-label col-3">Codigo</label>
+                  <div class="col-5">
+                    <input type="text" v-model="codigo" name="codigo" id="codigo" class="form-control"
+                      placeholder="Codigo." required>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-3">Nombre</label>
+                  <div class="col-5">
+                    <input type="text" v-model="nombre_producto" name="nombre_producto" id="nombre_producto"
+                      class="form-control" placeholder="Nombre producto." required>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-3">Tipo</label>
+                  <div class="col-5">
+                    <input type="text" v-model="tipo_producto" id="tipo_producto" name="tipo_producto"
+                      class="form-control" placeholder="Tipo producto" required>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-3">Precio</label>
+                  <div class="col-5">
+                    <input type="text" v-model="precio_producto" name="precio_producto" id="precio_producto"
+                      class="form-control" placeholder="Valor producto" required>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+<script>
+
+
+  let App = new Vue({
+    el: '#app',
+    data() {
+      return {
+        codigo: '',
+        nombre_producto: '',
+        tipo_producto: '',
+        precio_producto: '',
+        cadastros: [],
+
+        primertitle: "FAST",
+        segindotitle: "FOOD",
+        showAlerta: false,
+
+        alerta: {
+          tipo: '',
+          message: ''
+        },
+        modal: {
+          title: '',
+          id: null,
+          data: {}
+        }
+      }
+    },
+    methods: {
+      closeAlerta() {this.showAlerta = false},
+
+      edit(row, codigo) {
+        this.modal.title = "Editar";
+        this.modal.codigo = codigo
+        this.modal.data = _.clone(row)
+        $(this.$refs.modal).modal('show')
+      },
+
+      add() {
+        this.modal.title = "Registrar Producto";
+        this.modal.id = null
+        // this.modal.codigo = codigo
+        this.modal.data = {}
+        $(this.$refs.modal).modal('show')
+      },
+
+      deletar(k) {
+        this.$delete(this.cadastros, k)
+        window.localStorage.setItem('cadastros', JSON.stringify(this.cadastros));
+        this.alerta.tipo = 'warning'
+        this.alerta.message = 'Producto eliminado con exito'
+        this.showAlerta = true
+
+      },
+
+      save() {
+          if (this.modal.id || this.modal.id === 0) {
+            this.cadastros[this.modal.id] = this.modal.data
+            endpoint = "http://localhost:8080/menu/guardar";
+            opciones = {
+              method: "POST",
+              headers: { "Content-type": "Application/json" },
+              body: JSON.stringify({
+                codigo: this.codigo, nombre_producto: this.nombre_producto, tipo_producto: this.tipo_producto,
+                precio_producto: this.precio_producto
+              })
+            },
+              fetch(endpoint, opciones).then(async Response => {
+                if (Response) {
+                  Swal.fire({
+                        icon: 'success',
+                        title: 'Correcto',
+                        text: 'Registrado correctamente',
+                        Timer:500
+                            })
+                }
+                else if (!Response) {
+
+                  alert("Error, intentalo nuevamente");
+                  return false;
+                }
+                else {
+                  alert("error22")
+                  return null
+                }
+              })
+          } else {
+            this.cadastros.push(this.modal.data)
+          }
+
+          window.localStorage.setItem('cadastros', JSON.stringify(this.cadastros));
+
+          this.alerta.tipo = 'success'
+          this.alerta.message = 'Registro Producto completado'
+          this.showAlerta = true
+          $(this.$refs.modal).modal('hide')
+        // } catch (error) {
+        //   alert("error de trycatch")
+        // }
+      }
+    },
+    verproductos() {
+       endpoint = "http://localhost:8080/menu/";
+       opciones = { method: "GET" }
+      fetch(endpoint, opciones).then(async response => {
+        this.cadastros = await response.json();
+      })
+    },
+
+    created() {
+      if (window.localStorage.getItem('cadastros') === null) {
+        window.localStorage.setItem('cadastros', JSON.stringify([
+          {codigo:1, nombre_producto: "Hamburguesa Mexicana", tipo_producto: "Comida rapida", precio_producto: "12000" },
+          {codigo:2, nombre_producto: "Pizza de la casa",tipo_producto: "Comidaa rapida", precio_producto: "25000" },
+         {codigo:3, nombre_producto: "Pechuga a la mandarin", tipo_producto: "Platos gourmet", precio_producto: "35000" },
+         ]));
+       }
+       this.cadastros = JSON.parse(window.localStorage.getItem('cadastros'));
+   }
+
+  })
+</script>
+
+</html>

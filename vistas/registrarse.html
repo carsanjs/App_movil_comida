@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="Utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <link rel="stylesheet" href="../estilos/styles3css.css">
+
+    <title>Registrarse</title>
+</head>
+<body>
+    <div id="app">
+        <main class="maincontenapp">
+            <div class="contendor">
+                <div class="contencontendor">
+                    <div class="divlogo">
+                        <img  class="logo" src="../img/fasfood2.jpg" alt="">
+                    </div>
+        
+                    <div class="divtitulo">
+                        <h1 class="h1color">{{primertitle}}<small class="smallcolor">{{segindotitle}}</small></h1> 
+                   
+                    </div>
+                    
+                </div>
+               
+            </div>
+        
+            <div class="divmaincontent">
+    
+                <main class="maincontenregistro">
+
+                    <div class="contenidoinputs">
+                     <form action="" method="POST" name="form">
+                        <div  class="divinputs">     
+                        <label  class="classlabel" for="id">{{labelid}}</label>
+                        <input type="text" name="id" id="id" v-model="id" placeholder="Documento">
+                         </div>
+
+                      <div class="divinputs">
+                        <label class="classlabel" for="nombre">{{labelnombre}}</label>
+                        <input  type="text" name="nombre" id="nombre" v-model="nombre" placeholder="nombre">
+                      </div>
+                     <div  class="divinputs">
+                        <label   class="classlabel" for="apellido">{{labelapellido}}</label>
+                      <input  type="text" name="apellido" id="apellido" v-model="apellido" placeholder="apellido" >
+                     </div>
+          
+                     <div  class="divinputs">
+                        <label  class="classlabel" for="usuario">{{labelusuario}}</label>
+                        <input type="text" name="usuario" id="usuario" v-model="usuario"placeholder="usuario" >
+                       </div>
+    
+                       <div  class="divinputs">
+                        <label  class="classlabel" for="correo">{{labelemail}}</label>
+                        <input type="email" name="correo" id="correo" v-model="correo" placeholder="correo">
+                       </div>
+    
+    
+                       <div  class="divinputs">
+                        <label   class="classlabel" for="password">{{labelclave}}</label>
+                        <input type="password" name="password" id="password" v-model="password" placeholder="password" autocomplete="off" >
+                       </div>
+    
+    
+    
+    
+    
+    
+                    </div>
+               
+                    <!-- <a class="classignup"></a> -->
+                        <div class="contenedorbutton">
+                         <button type="button" @click="registrocliente" >{{login}}</button>
+                          </div>
+                        </form>
+                    </main>
+                   
+                  </div>
+        </main>
+    </div>
+    
+    <script>
+        const App= new Vue({
+         el:'#app',
+         data() {
+             return {
+
+                 primertitle:"FAST",
+                 segindotitle:"FOOD",
+                 labelid:"Documento",
+                 login:"Login",
+                 id:'',         
+                 labelnombre:"Nombre",
+                 nombre:'',
+                 labelapellido:"Apellido",
+                 apellido:'',
+                labelusuario:"Usuario",
+                usuario:'',
+                 labelemail:"Email",
+                correo:'',
+                 labelclave:"Clave",
+                 password:''
+                
+             }
+         },
+         methods: {
+            registrocliente(){
+         endpoint="http://localhost:8080/clientes/guardar";
+         opciones={
+            method:"POST",
+            headers:{"Content-type":"Application/json"},
+            body:JSON.stringify({id:this.id,nombre:this.nombre,apellido:this.apellido,
+                usuario:this.usuario,correo:this.correo,password:this.password})
+        },
+        fetch(endpoint, opciones).then(async Response =>{
+
+ 
+             if(Response)  {
+              alert("bienvenido");
+            
+          console.log(Response)
+             }
+             else if(!Response){
+                alert("error");
+             }
+             else{
+               alert("error22")
+             }
+        })    
+    }
+
+         },
+
+ 
+        })
+     </script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../estilos/styles2css.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <title>iniciar sesión</title>
+</head>
+
+<body class="bodysession" id="bodysession">
+  <div id="app" class="idapp">
+
+    <main class="maincontenapp">
+      <div class="contendor">
+        <div class="contencontendor">
+          <div class="divlogo">
+            <img class="logo" src="../img/fasfood2.jpg" alt="">
+          </div>
+
+          <div class="divtitulo">
+            <h1 class="h1color">{{primertitle}}<small class="smallcolor">{{segindotitle}}</small></h1>
+
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+
+    <div class="divmaincontent">
+
+      <main class="maincontenregistro">
+        <div class="conttitlewelcome">
+          <h1>{{subtitle}}</h1>
+        </div>
+        <form>
+          <div class="contenidoinputs">
+            <div class="divinputs">
+              <input type="email" name="correo" id="correo" v-model="correo" placeholder="Email.">
+            </div>
+            <div class="divinputs">
+              <input type="password" name="password" id="password" v-model="password" placeholder="Password."
+                autocomplete="off">
+            </div>
+
+          </div>
+          <div class="contenedorbutton">
+            <!-- <a class="classignup" href=""> -->
+            <button type="button" v-on:click="loginOn">{{login}}</button>
+            <!-- </a> -->
+          </div>
+        </form>
+
+        <div class="contencuentaoff">
+          <div class="cuentaoff">
+            <a class="classignup" href="">{{ olclave}}</a>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+  <script>
+    const App = new Vue({
+      el: '#app',
+      data() {
+        return {
+          correo: '',
+          password: '',
+          primertitle: "FAST",
+          segindotitle: "FOOD",
+          subtitle: "Bienvenido a Fast Food",
+          login: "Login",
+          olclave: "Olvido su Contraseña?"
+        }
+      },
+      methods: {
+        
+        loginOn: async function () {
+          var endpoint = 'http://localhost:8080/clientes/Login/' + this.correo;
+          var opciones = {
+            method: 'GET',
+            headers: {
+              "Content-type": "Application/json",
+              'Access-Control-Allow-Origin':'*',
+              'Access-Control-Allow-Headers':'Authorization'
+            }
+          };
+          fetch(endpoint, opciones).then(async response => {
+            const respuesta = await response.json();
+
+         try {
+          if (respuesta.length >= 1) {
+              Swal.fire({
+                width: 300,
+                icon: 'success',
+                title: 'Correcto',
+                text: "Usuario Registrado",
+                showConfirmButton: false,
+                timer: 500
+              })
+              window.location.href = ("./menu.html")
+            }
+            else if (!respuesta.length) {
+              Swal.fire({
+                width: 300,
+                icon: 'question',
+                title: 'Error',
+                text: "Usuario no encontrado",
+                showConfirmButton: false,
+                timer: 500
+              })
+            }
+            else
+              Swal.fire({
+                width: 300,
+                icon: 'error',
+                title: 'Error',
+                text: "Usuario o Clave Incorrectos",
+                showConfirmButton: false,
+                timer: 2000
+              })
+            // console.log(response)
+
+         } catch (error) {
+          Swal.fire({
+                width: 300,
+                icon: 'error',
+                title: 'Error',
+                text: "Error!! request server",
+                showConfirmButton: false,
+                timer: 2000
+              })
+          
+         }
+          }).then(data => data)
+            .catch(error => console.log(error));
+        }
+
+      },
+
+
+
+    })
+  </script>
+</body>
+
+</html>
